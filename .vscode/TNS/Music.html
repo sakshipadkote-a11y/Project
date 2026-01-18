@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Personal Playlist</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <h1 class="main-title">My Personal Playlist</h1>
+
+    <div class="player">
+        <h2 id="title">Song Title</h2>
+
+        <input type="range" id="progress" value="0">
+
+        <div class="buttons">
+            <button id="prev">⏮️</button>
+            <button id="play">▶️</button>
+            <button id="next">⏭️</button>
+        </div>
+    </div>
+
+    <audio id="audio"></audio>
+
+    <script>
+        let songs = [
+            { title: "Dangle", file: "MymusicPlayer/dangle.mp3" },
+            { title: "Besabriyaan", file: "MymusicPlayer/besabriyaan.mp3" }
+        ];
+
+        let currentSong = 0;
+
+        let audio = document.getElementById("audio");
+        let title = document.getElementById("title");
+        let playBtn = document.getElementById("play");
+        let nextBtn = document.getElementById("next");
+        let prevBtn = document.getElementById("prev");
+        let progress = document.getElementById("progress");
+
+        function loadSong() {
+            audio.src = songs[currentSong].file;
+            title.textContent = songs[currentSong].title;
+        }
+
+        playBtn.addEventListener("click", () => {
+            if (audio.paused) {
+                audio.play();
+                playBtn.textContent = "⏸️";
+            } else {
+                audio.pause();
+                playBtn.textContent = "▶️";
+            }
+        });
+
+        nextBtn.addEventListener("click", () => {
+            currentSong = (currentSong + 1) % songs.length;
+            loadSong();
+            audio.play();
+            playBtn.textContent = "⏸️";
+        });
+
+        prevBtn.addEventListener("click", () => {
+            currentSong = (currentSong - 1 + songs.length) % songs.length;
+            loadSong();
+            audio.play();
+            playBtn.textContent = "⏸️";
+        });
+
+        audio.addEventListener("timeupdate", () => {
+            progress.value = (audio.currentTime / audio.duration) * 100;
+        });
+
+        progress.addEventListener("input", () => {
+            audio.currentTime = (progress.value * audio.duration) / 100;
+        });
+
+        loadSong();
+    </script>
+
+</body>
+</html>
